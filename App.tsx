@@ -1,8 +1,8 @@
 import 'react-native-gesture-handler';
-import React, {FC} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import React, { FC } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 
-import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import Navigator from './src/navigator';
 
 // Initialize Apollo Client
