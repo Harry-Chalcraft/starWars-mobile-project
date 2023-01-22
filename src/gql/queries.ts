@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const getAllEpisodes = gql`
+export const GET_ALL_EPISODES = gql`
   query getAllEpisodes {
     allFilms {
       films {
@@ -13,7 +13,7 @@ export const getAllEpisodes = gql`
   }
 `;
 
-export const getEpisode = gql`
+export const GET_EPISODE = gql`
   query getEpisode($filmId: ID) {
     film(id: $filmId) {
       id
@@ -39,7 +39,7 @@ export const getEpisode = gql`
   }
 `;
 
-export const getCharacter = gql`
+export const GET_CHARACTER = gql`
   query Person($personId: ID) {
     person(id: $personId) {
       name
@@ -57,5 +57,11 @@ export const getCharacter = gql`
         }
       }
     }
+  }
+`;
+
+export const GET_SAVED_CHARACTERS = gql`
+  query {
+    characters @client
   }
 `;
