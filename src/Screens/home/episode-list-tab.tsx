@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { GET_ALL_EPISODES } from '../../gql/queries';
 import { Film } from '../../types';
-import { colors, sizes } from '../../constants';
+import { colors, sizes } from '../../theme/constants';
 import {
   SafeAreaView,
   ScrollView,
@@ -76,14 +76,16 @@ const EpisodeList: FC = () => {
       <SafeAreaView>
         <ScrollView>
           <Row alignItemsCentered justifyContent={'flex-end'}>
-            <Text>Sort by: </Text>
-            <Text bold>{isEnabled ? 'newest' : 'oldest'} </Text>
+            <Row justifyContent={'flex-end'}>
+              <Text>Sort by: </Text>
+              <Text bold>{isEnabled ? 'newest' : 'oldest'} </Text>
+            </Row>
             <StyledSwitch
               onValueChange={onSwitchChange}
               value={isEnabled}
               thumbColor={colors.primary}
-              ios_backgroundColor={colors.black}
-              trackColor={{ false: colors.black, true: colors.black }}
+              ios_backgroundColor={colors.grey}
+              trackColor={{ false: colors.grey, true: colors.grey }}
               style={{ transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] }}
             />
           </Row>

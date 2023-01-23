@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import styled from 'styled-components';
-import { colors } from '../constants';
+import { colors, sizes } from '../theme/constants';
+import { verticalScale } from '../theme/metrics';
 
 interface Props {
   fullBackground?: boolean;
@@ -18,6 +19,7 @@ const Row = styled(View)<Props>`
   justify-content: ${({ justifyContent }): string =>
     justifyContent ? justifyContent : 'flex-start'};
   display: flex;
+  margin-vertical: ${verticalScale(sizes.tiny)}px;
 `;
 
 export default Row;

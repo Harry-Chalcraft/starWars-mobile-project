@@ -1,7 +1,11 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { View, FlatList, Button } from 'react-native';
-import { useNavigation, RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { View, FlatList, Button, BackHandler } from 'react-native';
+import {
+  useNavigation,
+  RouteProp,
+  NavigationProp,
+  ParamListBase,
+} from '@react-navigation/native';
 
 import { StackNavigatorParams } from '../navigator';
 import { useQuery } from '@apollo/client';
@@ -9,7 +13,7 @@ import { GET_CHARACTER, GET_SAVED_CHARACTERS } from '../gql/queries';
 import { ADD_CHARACTER, DELETE_CHARACTER } from '../gql/mutations';
 
 import styled from 'styled-components';
-import { sizes } from '../constants';
+import { sizes } from '../theme/constants';
 import { Character } from '../types';
 import { useMutation } from '@apollo/client';
 import { verticalScale } from '../theme/metrics';
@@ -40,10 +44,10 @@ const VerticalMargin = styled(View)`
 const CharacterInfo = (props: Props): ReactElement => {
   const {
     route: {
-      params: { personId },
+      params: { personId, isFromFavouriteCharacters },
     },
   } = props;
-  const navigation = useNavigation<StackNavigationProp<StackNavigatorParams>>();
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   const [character, setCharacter] = useState<Character>();
   const [isCharacterSaved, setIsCharacterSaved] = useState<boolean>();
@@ -54,6 +58,25 @@ const CharacterInfo = (props: Props): ReactElement => {
   const { data: savedCharactersData } = useQuery(GET_SAVED_CHARACTERS);
   const [addCharacter] = useMutation(ADD_CHARACTER);
   const [deleteCharacter] = useMutation(DELETE_CHARACTER);
+
+  useEffect(() => {
+    const backAction = () => {
+      if (isFromFavouriteCharacters) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'FavouriteCharacters' }],
+        });
+      } else {
+        navigation.goBack();
+      }
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+    return () => backHandler.remove();
+  }, [navigation, isFromFavouriteCharacters]);
 
   useEffect(() => {
     if (data?.person) {

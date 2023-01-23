@@ -8,7 +8,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import styled from 'styled-components';
 import { Film } from '../types';
-import { sizes } from '../constants';
+import { sizes } from '../theme/constants';
 
 import { StackNavigatorParams } from '../navigator';
 

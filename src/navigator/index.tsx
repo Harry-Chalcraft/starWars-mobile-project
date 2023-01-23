@@ -1,66 +1,139 @@
+/* eslint-disable react/no-unstable-nested-components */
 import 'react-native-gesture-handler';
 import React, { ReactElement } from 'react';
+import { Platform } from 'react-native';
 import {
-  BottomTabNavigationOptions,
   createBottomTabNavigator,
+  BottomTabNavigationOptions,
 } from '@react-navigation/bottom-tabs';
 import {
   createStackNavigator,
   StackNavigationOptions,
-  TransitionPresets,
 } from '@react-navigation/stack';
+import EpisodeList from '../screens/home/episode-list-tab';
+import FavouriteCharacters from '../screens/home/favourite-character-tab';
+import Episode from '../screens/episode';
+import Character from '../screens/character';
+import { colors } from '../theme/constants';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { HeaderBackButton } from '@react-navigation/elements';
 
-import EpisodeList from '../Screens/home/episode-list-tab';
-import FavouriteCharacters from '../Screens/home/favourite-character-tab';
-import Episode from '../Screens/episode';
-import Character from '../Screens/character';
-
-export type EpisodeNavigatorParams = {
+export type StackNavigatorParams = {
   EpisodeList: undefined;
-  Episode: undefined;
-};
-
-export type CharacterNavigatorParams = {
-  FavouriteCharacters: undefined;
+  Episode: {
+    filmId: string;
+  };
   Character: {
     personId: string;
+    isFromFavouriteCharacters?: boolean;
   };
 };
 
 const RootTabs = createBottomTabNavigator();
-const CharacterStack = createStackNavigator<CharacterNavigatorParams>();
-const EpisodeStack = createStackNavigator<EpisodeNavigatorParams>();
+const Stack = createStackNavigator<StackNavigatorParams>();
 
-const EpisodeNavigator = (): ReactElement => {
+const headerOptions: StackNavigationOptions = {
+  headerTintColor: `${colors.primary}`,
+  headerBackTitleVisible: false,
+  headerStyle: {
+    backgroundColor: `${colors.black}`,
+    shadowColor: 'transparent',
+    elevation: 0,
+  },
+  headerTitleStyle: {
+    fontFamily: `${Platform.OS === 'ios' ? 'Menlo' : 'monospace'}`,
+  },
+  headerTitleAlign: 'center',
+};
+
+const tabBarOptions: BottomTabNavigationOptions = {
+  headerTintColor: `${colors.primary}`,
+  headerStyle: {
+    backgroundColor: `${colors.black}`,
+    shadowColor: 'transparent',
+    elevation: 0,
+  },
+  unmountOnBlur: true,
+  tabBarActiveTintColor: `${colors.primary}`,
+  tabBarStyle: {
+    backgroundColor: `${colors.grey}`,
+    borderTopWidth: 0,
+  },
+  tabBarLabelStyle: {
+    fontFamily: `${Platform.OS === 'ios' ? 'Menlo' : 'monospace'}`,
+  },
+  headerTitleStyle: {
+    fontFamily: `${Platform.OS === 'ios' ? 'Menlo' : 'monospace'}`,
+  },
+  headerTitleAlign: 'center',
+};
+
+const StackNavigator = (): ReactElement<StackNavigatorParams> => {
   return (
-    <EpisodeStack.Navigator>
-      <EpisodeStack.Screen name="EpisodeList" component={EpisodeList} />
-      <EpisodeStack.Screen name="Episode" component={Episode} />
-    </EpisodeStack.Navigator>
+    <Stack.Navigator screenOptions={headerOptions}>
+      <Stack.Screen
+        name="EpisodeList"
+        component={EpisodeList}
+        options={{ title: 'Movie List' }}
+      />
+      <Stack.Screen
+        name="Episode"
+        component={Episode}
+        options={{ title: 'Movie' }}
+      />
+      <Stack.Screen
+        name="Character"
+        component={Character}
+        options={({ navigation, route }) => ({
+          headerLeft: () => (
+            <HeaderBackButton
+              tintColor={colors.primary}
+              onPress={() => {
+                if (route?.params?.isFromFavouriteCharacters) {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'FavouriteCharacters' }],
+                  });
+                } else {
+                  navigation.goBack();
+                }
+              }}
+            />
+          ),
+          title: 'Character',
+        })}
+      />
+    </Stack.Navigator>
   );
 };
 
-export const CharacterNavigator =
-  (): ReactElement<CharacterNavigatorParams> => {
-    return (
-      <CharacterStack.Navigator>
-        <CharacterStack.Screen
-          name="FavouriteCharacters"
-          component={FavouriteCharacters}
-        />
-        <CharacterStack.Screen name="Character" component={Character} />
-      </CharacterStack.Navigator>
-    );
-  };
+const MovieIcon = ({ color, size }: { color: string; size: number }) => (
+  <MaterialCommunityIcons name="movie" color={color} size={size} />
+);
+const CharacterIcon = ({ color, size }: { color: string; size: number }) => (
+  <MaterialIcons name="group" color={color} size={size} />
+);
 
 const Navigation = (): ReactElement => {
   return (
-    <RootTabs.Navigator
-      screenOptions={{ unmountOnBlur: true, headerShown: false }}>
-      <RootTabs.Screen name="EpisodeNavigator" component={EpisodeNavigator} />
+    <RootTabs.Navigator screenOptions={tabBarOptions}>
       <RootTabs.Screen
-        name="CharacterNavigator"
-        component={CharacterNavigator}
+        name="MovieNavigator"
+        component={StackNavigator}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Movies',
+          tabBarIcon: MovieIcon,
+        }}
+      />
+      <RootTabs.Screen
+        name="FavouriteCharacters"
+        component={FavouriteCharacters}
+        options={{
+          title: 'Favourite Characters',
+          tabBarIcon: CharacterIcon,
+        }}
       />
     </RootTabs.Navigator>
   );

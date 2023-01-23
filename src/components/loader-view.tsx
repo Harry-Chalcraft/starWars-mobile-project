@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import styled from 'styled-components';
-import { colors } from '../constants';
+import { colors } from '../theme/constants';
 import { SafeAreaView } from '.';
 
 const LoaderWrapper = styled(View)`

@@ -1,6 +1,6 @@
 import { SafeAreaView } from 'react-native';
 import styled from 'styled-components';
-import { colors } from '../constants';
+import { colors } from '../theme/constants';
 
 const StyledSafeAreaView = styled(SafeAreaView)`
   flex-grow: 1;

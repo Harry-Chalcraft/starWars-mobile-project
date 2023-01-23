@@ -1,6 +1,6 @@
-import { Text } from 'react-native';
+import { Text, Platform } from 'react-native';
 import styled from 'styled-components';
-import { sizes, colors } from '../constants';
+import { sizes, colors } from '../theme/constants';
 import { moderateScale } from '../theme/metrics';
 
 interface Props {
@@ -19,6 +19,7 @@ const StyledText = styled(Text)<Props>`
     large
       ? moderateScale(sizes.fontSize.large)
       : moderateScale(sizes.fontSize.medium)}px;
+  font-family: ${Platform.OS === 'ios' ? 'Menlo' : 'monospace'};
 `;
 
 export default StyledText;

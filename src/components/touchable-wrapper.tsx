@@ -1,6 +1,6 @@
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
-import { sizes, colors } from '../constants';
+import { sizes, colors } from '../theme/constants';
 import {
   horizontalScale,
   verticalScale,

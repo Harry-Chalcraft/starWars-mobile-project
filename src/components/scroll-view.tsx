@@ -1,6 +1,6 @@
 import { ScrollView } from 'react-native';
 import styled from 'styled-components';
-import { sizes } from '../constants';
+import { sizes } from '../theme/constants';
 import { horizontalScale, verticalScale } from '../theme/metrics';
 
 const StyledScrollView = styled(ScrollView)`
