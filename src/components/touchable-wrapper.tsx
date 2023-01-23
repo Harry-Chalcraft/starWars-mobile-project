@@ -22,7 +22,7 @@ const TouchableWrapper = styled(TouchableOpacity)<Props>`
   justify-content: center;
   align-self: ${({ alignCenter }): string =>
     alignCenter ? 'center' : 'stretch'};
-  margin-horizontal: ${sizes.tiny}px;
+  margin-horizontal: ${horizontalScale(sizes.tiny)}px;
   display: flex;
   width: ${({ reducedWidth }): string => (reducedWidth ? '70%' : 'auto')};
 `;

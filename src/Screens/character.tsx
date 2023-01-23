@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import { sizes } from '../constants';
 import { Character } from '../types';
 import { useMutation } from '@apollo/client';
+import { verticalScale } from '../theme/metrics';
 
 import {
   SafeAreaView,
@@ -33,7 +34,7 @@ type Data = {
 };
 
 const VerticalMargin = styled(View)`
-  margin-vertical: ${sizes.medium}px;
+  margin-vertical: ${verticalScale(sizes.medium)}px;
 `;
 
 const CharacterInfo = (props: Props): ReactElement => {

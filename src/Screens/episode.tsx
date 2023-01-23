@@ -22,6 +22,7 @@ import {
   LoaderView,
   ErrorView,
 } from '../components';
+import { verticalScale } from '../theme/metrics';
 
 type RouteProps = RouteProp<StackNavigatorParams, 'Episode'>;
 export interface Props {
@@ -32,7 +33,7 @@ type Data = {
 };
 
 const VerticalMargin = styled(View)`
-  margin-vertical: ${sizes.medium}px;
+  margin-vertical: ${verticalScale(sizes.medium)}px;
 `;
 
 const Episode = (props: Props): ReactElement => {

@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { GET_ALL_EPISODES } from '../../gql/queries';
 import { Film } from '../../types';
-import { colors } from '../../constants';
+import { colors, sizes } from '../../constants';
 import {
   SafeAreaView,
   ScrollView,
@@ -18,6 +18,7 @@ import {
   LoaderView,
   ErrorView,
 } from '../../components';
+import { moderateScale } from '../../theme/metrics';
 
 type Data = {
   allFilms: {
@@ -26,7 +27,7 @@ type Data = {
 };
 
 const StyledSwitch = styled(Switch)`
-  border: 2px solid ${colors.primary};
+  border: ${moderateScale(sizes.tiny)}px solid ${colors.primary};
 `;
 
 const EpisodeList: FC = () => {

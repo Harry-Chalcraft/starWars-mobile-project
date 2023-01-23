@@ -13,11 +13,12 @@ interface Props {
 const StyledText = styled(Text)<Props>`
   color: ${({ colored }): string => (colored ? colors.black : colors.primary)};
   font-weight: ${({ bold }): string => (bold ? 'bold' : 'normal')};
-  font-size: ${moderateScale(sizes.fontSize.medium)}px;
   align-self: ${({ alignSelf }): string =>
     alignSelf ? 'center' : 'flex-start'};
   font-size: ${({ large }): number =>
-    large ? sizes.fontSize.large : sizes.fontSize.medium}px;
+    large
+      ? moderateScale(sizes.fontSize.large)
+      : moderateScale(sizes.fontSize.medium)}px;
 `;
 
 export default StyledText;
