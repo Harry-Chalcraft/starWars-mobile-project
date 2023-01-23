@@ -6,6 +6,7 @@ import {
   NavigationProp,
   ParamListBase,
 } from '@react-navigation/native';
+import Animated, { PinwheelIn } from 'react-native-reanimated';
 
 import { StackNavigatorParams } from '../navigator';
 import { useQuery } from '@apollo/client';
@@ -13,7 +14,7 @@ import { GET_CHARACTER, GET_SAVED_CHARACTERS } from '../gql/queries';
 import { ADD_CHARACTER, DELETE_CHARACTER } from '../gql/mutations';
 
 import styled from 'styled-components';
-import { sizes } from '../theme/constants';
+import { sizes, colors } from '../theme/constants';
 import { Character } from '../types';
 import { useMutation } from '@apollo/client';
 import { verticalScale } from '../theme/metrics';
@@ -27,7 +28,10 @@ import {
   Card,
   LoaderView,
   ErrorView,
+  Row,
 } from '../components';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 type RouteProps = RouteProp<StackNavigatorParams, 'Character'>;
 export interface Props {
@@ -99,13 +103,18 @@ const CharacterInfo = (props: Props): ReactElement => {
   const onCardPress = (filmId: string) => {
     navigation.navigate('Episode', { filmId });
   };
-  const saveAsFavourite = () => {
-    addCharacter({
-      variables: { id: character?.id, name: character?.name },
-    });
+  const handleLikeButton = () => {
+    if (isCharacterSaved) {
+      deleteCharacter({ variables: { id: character?.id } });
+    } else {
+      addCharacter({
+        variables: { id: character?.id, name: character?.name },
+      });
+    }
   };
-  const handleDeleteId = () => {
-    deleteCharacter({ variables: { id: character?.id } });
+
+  const onAnimate = () => {
+    console.log('totoonpressAnimate');
   };
 
   const info: { label: string; content?: string | number }[] = [
@@ -126,6 +135,7 @@ const CharacterInfo = (props: Props): ReactElement => {
       content: character?.homeworld?.name,
     },
   ];
+
   if (loading) {
     return <LoaderView />;
   } else if (error) {
@@ -141,7 +151,18 @@ const CharacterInfo = (props: Props): ReactElement => {
                   {character?.name}
                 </Text>
               </VerticalMargin>
-              {info && <InformationList info={info} />}
+              <Row justifyContent="space-between" alignItemsCentered>
+                <View style={{ flex: 1 }}>
+                  {info && <InformationList info={info} />}
+                </View>
+                <Icon
+                  onPress={handleLikeButton}
+                  name={isCharacterSaved ? 'heart' : 'heart-o'}
+                  size={40}
+                  color={colors.primary}
+                  style={{ marginRight: 10 }}
+                />
+              </Row>
               <Text bold>Has appeared in: </Text>
               <VerticalMargin>
                 <FlatList
@@ -166,8 +187,7 @@ const CharacterInfo = (props: Props): ReactElement => {
               No data there is
             </Text>
           )}
-          <Button title="save as favourite" onPress={saveAsFavourite} />
-          <Button title="delete as favourite" onPress={handleDeleteId} />
+          <Button title="animate" onPress={onAnimate} />
         </ScrollView>
       </SafeAreaView>
     );
