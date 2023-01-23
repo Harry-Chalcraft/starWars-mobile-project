@@ -1,39 +1,130 @@
-import React, { FC } from 'react';
-import { Text, Button } from 'react-native';
+import React, { ReactElement, useState, useEffect } from 'react';
+import { View, FlatList } from 'react-native';
 import { useQuery } from '@apollo/client';
-import { getEpisode } from '../gql/queries';
-import {
-  useNavigation,
-  NavigationProp,
-  ParamListBase,
-} from '@react-navigation/native';
-import { CharacterNavigatorParams } from '../navigator';
+import moment from 'moment';
+import { GET_EPISODE } from '../gql/queries';
+import { useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-const Episode: FC = () => {
-  const navigation =
-    // useNavigation<StackNavigationProp<CharacterNavigatorParams>>();
-    useNavigation<NavigationProp<ParamListBase>>();
+import styled from 'styled-components';
+import { Film } from '../types';
+import { sizes } from '../constants';
 
-  const { data } = useQuery(getEpisode, {
-    variables: { filmId: 'ZmlsbXM6Mw==' },
+import { StackNavigatorParams } from '../navigator';
+
+import {
+  SafeAreaView,
+  ScrollView,
+  Wrapper,
+  Card,
+  Text,
+  InformationList,
+  LoaderView,
+  ErrorView,
+} from '../components';
+
+type RouteProps = RouteProp<StackNavigatorParams, 'Episode'>;
+export interface Props {
+  route: RouteProps;
+}
+type Data = {
+  film: Film;
+};
+
+const VerticalMargin = styled(View)`
+  margin-vertical: ${sizes.medium}px;
+`;
+
+const Episode = (props: Props): ReactElement => {
+  const {
+    route: {
+      params: { filmId },
+    },
+  } = props;
+  const navigation = useNavigation<StackNavigationProp<StackNavigatorParams>>();
+  const [film, setFilm] = useState<Film>();
+  const { data, loading, error } = useQuery<Data>(GET_EPISODE, {
+    variables: { filmId },
   });
-  console.log('totodata', data);
-  return (
-    <>
-      <Text>Episode</Text>
-      <Button
-        title="gotocharacter"
-        onPress={() => {
-          console.log('totoonpress');
-          navigation.navigate('CharacterNavigator', {
-            screen: 'Character',
-            params: { personId: 'cGVvcGxlOjE=' },
-          });
-        }}
-      />
-    </>
-  );
+
+  useEffect(() => {
+    if (data?.film) {
+      setFilm(data?.film);
+    }
+  }, [data]);
+
+  const onCardPress = (personId: string) => {
+    navigation.navigate('Character', { personId });
+  };
+
+  const info: { label: string; content?: string | number }[] = [
+    {
+      label: 'Released on: ',
+      content: moment(film?.releaseDate).format('DD/MM/YYYY'),
+    },
+    {
+      label: 'Number of species: ',
+      content: film?.speciesConnection?.totalCount,
+    },
+    {
+      label: 'Number of planets: ',
+      content: film?.planetConnection?.totalCount,
+    },
+    {
+      label: 'Number of vehicules: ',
+      content: film?.vehicleConnection?.totalCount,
+    },
+    {
+      label: 'Plot: ',
+      content: film?.openingCrawl,
+    },
+  ];
+  if (loading) {
+    return <LoaderView />;
+  } else if (error) {
+    return <ErrorView />;
+  } else {
+    return (
+      <SafeAreaView>
+        <ScrollView>
+          {film ? (
+            <Wrapper>
+              <VerticalMargin>
+                <Text alignSelf bold large>
+                  {film?.title}
+                </Text>
+              </VerticalMargin>
+              {info && <InformationList info={info} />}
+              <VerticalMargin>
+                <Text bold>Characters: </Text>
+              </VerticalMargin>
+              <FlatList
+                data={film?.characterConnection?.characters}
+                scrollEnabled={false}
+                numColumns={3}
+                horizontal={false}
+                initialNumToRender={50}
+                renderItem={({ item }) => (
+                  <Card
+                    textAlignSelf
+                    title={item.name}
+                    onCardPress={onCardPress}
+                    id={item.id}
+                    key={item.id}
+                  />
+                )}
+                keyExtractor={item => item.id}
+              />
+            </Wrapper>
+          ) : (
+            <Text bold alignSelf>
+              No data there is
+            </Text>
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 };
 
 export default Episode;
