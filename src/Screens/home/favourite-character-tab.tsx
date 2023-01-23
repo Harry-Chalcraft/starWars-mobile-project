@@ -49,8 +49,8 @@ const FavouriteCharacters: FC = () => {
     return (
       <SafeAreaView>
         {data?.characters.length ? (
-          data.characters.map(character => (
-            <ScrollView key={character.id}>
+          <ScrollView>
+            {data.characters.map(character => (
               <TouchableWrapper
                 key={character.id}
                 reducedWidth
@@ -62,8 +62,8 @@ const FavouriteCharacters: FC = () => {
                   {character.name}
                 </Text>
               </TouchableWrapper>
-            </ScrollView>
-          ))
+            ))}
+          </ScrollView>
         ) : (
           <MessageWrapper>
             <Text bold alignSelf>
