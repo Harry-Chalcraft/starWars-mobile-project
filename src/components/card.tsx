@@ -31,7 +31,7 @@ const Card: FC<Props> = ({
       onPress={() => {
         onCardPress(id);
       }}>
-      <Row justifyContentCentered fullBackground={fullBackgroundTitle}>
+      <Row justifyContent={'center'} fullBackground={fullBackgroundTitle}>
         <Text bold colored={coloredTitle} alignSelf={textAlignSelf}>
           {title}
         </Text>

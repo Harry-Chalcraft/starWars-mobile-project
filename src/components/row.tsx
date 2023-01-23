@@ -5,7 +5,7 @@ import { colors } from '../constants';
 interface Props {
   fullBackground?: boolean;
   alignItemsCentered?: boolean;
-  justifyContentCentered?: boolean;
+  justifyContent?: string;
 }
 
 const Row = styled(View)<Props>`
@@ -15,8 +15,8 @@ const Row = styled(View)<Props>`
     fullBackground ? colors.primary : 'none'};
   align-items: ${({ alignItemsCentered }): string =>
     alignItemsCentered ? 'center' : 'flex-start'};
-  justify-content: ${({ justifyContentCentered }): string =>
-    justifyContentCentered ? 'center' : 'flex-start'};
+  justify-content: ${({ justifyContent }): string =>
+    justifyContent ? justifyContent : 'flex-start'};
   display: flex;
 `;
 
