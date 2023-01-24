@@ -14,10 +14,10 @@ import { HeaderBackButton } from '@react-navigation/elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import EpisodeList from '../screens/home/episode-list-tab';
-import FavouriteCharacters from '../screens/home/favourite-character-tab';
-import Episode from '../screens/episode';
-import Character from '../screens/character';
+import EpisodeList from '../Screens/home/episode-list-tab';
+import FavouriteCharacters from '../Screens/home/favourite-character-tab';
+import Episode from '../Screens/episode';
+import Character from '../Screens/character';
 
 import { colors, sizes } from '../theme/constants';
 import { moderateScale } from '../theme/metrics';
