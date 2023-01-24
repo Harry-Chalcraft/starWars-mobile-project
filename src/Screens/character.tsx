@@ -1,12 +1,12 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { View, FlatList, Button, BackHandler } from 'react-native';
+import { View, FlatList, BackHandler } from 'react-native';
+import { TapGestureHandler } from 'react-native-gesture-handler';
 import {
   useNavigation,
   RouteProp,
   NavigationProp,
   ParamListBase,
 } from '@react-navigation/native';
-import Animated, { PinwheelIn } from 'react-native-reanimated';
 
 import { StackNavigatorParams } from '../navigator';
 import { useQuery } from '@apollo/client';
@@ -17,7 +17,7 @@ import styled from 'styled-components';
 import { sizes, colors } from '../theme/constants';
 import { Character } from '../types';
 import { useMutation } from '@apollo/client';
-import { verticalScale } from '../theme/metrics';
+import { verticalScale, horizontalScale } from '../theme/metrics';
 
 import {
   SafeAreaView,
@@ -30,6 +30,13 @@ import {
   ErrorView,
   Row,
 } from '../components';
+
+import Animated, {
+  useSharedValue,
+  withTiming,
+  useAnimatedStyle,
+  withDelay,
+} from 'react-native-reanimated';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -111,10 +118,7 @@ const CharacterInfo = (props: Props): ReactElement => {
         variables: { id: character?.id, name: character?.name },
       });
     }
-  };
-
-  const onAnimate = () => {
-    console.log('totoonpressAnimate');
+    launchAnimation();
   };
 
   const info: { label: string; content?: string | number }[] = [
@@ -136,6 +140,58 @@ const CharacterInfo = (props: Props): ReactElement => {
     },
   ];
 
+  const scale = useSharedValue(0);
+  const opacity = useSharedValue(0);
+  const rSrtle = useAnimatedStyle(() => ({
+    transform: [{ scale: Math.max(scale.value, 0) }],
+    opacity: opacity.value,
+    alignSelf: 'center',
+    position: 'absolute',
+  }));
+
+  const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+
+  const launchAnimation = () => {
+    scale.value = withTiming(
+      1,
+      {
+        duration: 1000,
+      },
+      isFinished => {
+        if (isFinished) {
+          scale.value = withDelay(
+            500,
+            withTiming(0, {
+              duration: 1000,
+            }),
+          );
+        }
+      },
+    );
+
+    opacity.value = withTiming(
+      1,
+      {
+        duration: 1000,
+      },
+      isFinished => {
+        if (isFinished) {
+          opacity.value = withDelay(
+            500,
+            withTiming(0, {
+              duration: 1000,
+            }),
+          );
+        }
+      },
+    );
+  };
+  const iconStyle = { marginRight: verticalScale(sizes.medium) };
+  const flexedViewStyle = { flex: 1 };
+  const textStyle = {
+    marginTop: horizontalScale(sizes.medium),
+  };
+
   if (loading) {
     return <LoaderView />;
   } else if (error) {
@@ -143,52 +199,68 @@ const CharacterInfo = (props: Props): ReactElement => {
   } else {
     return (
       <SafeAreaView>
-        <ScrollView>
-          {character ? (
-            <Wrapper>
-              <VerticalMargin>
-                <Text bold alignSelf large>
-                  {character?.name}
-                </Text>
-              </VerticalMargin>
-              <Row justifyContent="space-between" alignItemsCentered>
-                <View style={{ flex: 1 }}>
-                  {info && <InformationList info={info} />}
-                </View>
-                <Icon
-                  onPress={handleLikeButton}
-                  name={isCharacterSaved ? 'heart' : 'heart-o'}
-                  size={40}
-                  color={colors.primary}
-                  style={{ marginRight: 10 }}
-                />
-              </Row>
-              <Text bold>Has appeared in: </Text>
-              <VerticalMargin>
-                <FlatList
-                  data={character?.filmConnection?.films}
-                  scrollEnabled={false}
-                  initialNumToRender={6}
-                  renderItem={({ item }) => (
-                    <Card
-                      alignCenter
-                      reducedWidth
-                      title={item.title}
-                      onCardPress={onCardPress}
-                      id={item.id}
+        <TapGestureHandler numberOfTaps={2} onActivated={handleLikeButton}>
+          <ScrollView>
+            {character ? (
+              <>
+                <Wrapper>
+                  <VerticalMargin>
+                    <Text bold alignSelf large>
+                      {character?.name}
+                    </Text>
+                  </VerticalMargin>
+                  <Row justifyContent="space-between" alignItemsCentered>
+                    <View style={flexedViewStyle}>
+                      {info && <InformationList info={info} />}
+                    </View>
+                    <Icon
+                      onPress={handleLikeButton}
+                      name={isCharacterSaved ? 'heart' : 'heart-o'}
+                      size={40}
+                      color={colors.primary}
+                      style={iconStyle}
                     />
-                  )}
-                  keyExtractor={item => item.id}
-                />
-              </VerticalMargin>
-            </Wrapper>
-          ) : (
-            <Text bold alignSelf>
-              No data there is
-            </Text>
-          )}
-          <Button title="animate" onPress={onAnimate} />
-        </ScrollView>
+                  </Row>
+                  <Animated.View>
+                    <AnimatedIcon
+                      name={'heart'}
+                      size={200}
+                      color={colors.primary}
+                      style={[rSrtle]}
+                    />
+                  </Animated.View>
+                  <Text bold>Has appeared in: </Text>
+                  <VerticalMargin>
+                    <FlatList
+                      data={character?.filmConnection?.films}
+                      scrollEnabled={false}
+                      initialNumToRender={6}
+                      renderItem={({ item }) => (
+                        <Card
+                          alignCenter
+                          reducedWidth
+                          title={item.title}
+                          onCardPress={onCardPress}
+                          id={item.id}
+                        />
+                      )}
+                      keyExtractor={item => item.id}
+                    />
+                  </VerticalMargin>
+                </Wrapper>
+                <View style={textStyle}>
+                  <Text bold alignSelf textAlign="center">
+                    Double tap screen to{' '}
+                    {isCharacterSaved ? 'delete from' : 'save to'} favourite
+                    characters
+                  </Text>
+                </View>
+              </>
+            ) : (
+              <Text>No data there is</Text>
+            )}
+          </ScrollView>
+        </TapGestureHandler>
       </SafeAreaView>
     );
   }

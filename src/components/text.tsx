@@ -8,6 +8,7 @@ interface Props {
   bold?: boolean;
   alignSelf?: boolean;
   large?: boolean;
+  textAlign?: string;
 }
 
 const StyledText = styled(Text)<Props>`
@@ -20,6 +21,7 @@ const StyledText = styled(Text)<Props>`
       ? moderateScale(sizes.fontSize.large)
       : moderateScale(sizes.fontSize.medium)}px;
   font-family: ${Platform.OS === 'ios' ? 'Menlo' : 'monospace'};
+  text-align: ${({ textAlign }): string => (textAlign ? textAlign : 'auto')};
 `;
 
 export default StyledText;
