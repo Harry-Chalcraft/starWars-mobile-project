@@ -14,10 +14,11 @@ import EpisodeList from '../screens/home/episode-list-tab';
 import FavouriteCharacters from '../screens/home/favourite-character-tab';
 import Episode from '../screens/episode';
 import Character from '../screens/character';
-import { colors } from '../theme/constants';
+import { colors, sizes } from '../theme/constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { HeaderBackButton } from '@react-navigation/elements';
+import { moderateScale } from '../theme/metrics';
 
 export type StackNavigatorParams = {
   EpisodeList: undefined;
@@ -43,6 +44,7 @@ const headerOptions: StackNavigationOptions = {
   },
   headerTitleStyle: {
     fontFamily: `${Platform.OS === 'ios' ? 'Menlo' : 'monospace'}`,
+    fontSize: moderateScale(sizes.fontSize.medium),
   },
   headerTitleAlign: 'center',
 };
@@ -62,9 +64,11 @@ const tabBarOptions: BottomTabNavigationOptions = {
   },
   tabBarLabelStyle: {
     fontFamily: `${Platform.OS === 'ios' ? 'Menlo' : 'monospace'}`,
+    fontSize: moderateScale(sizes.fontSize.small),
   },
   headerTitleStyle: {
     fontFamily: `${Platform.OS === 'ios' ? 'Menlo' : 'monospace'}`,
+    fontSize: moderateScale(sizes.fontSize.medium),
   },
   headerTitleAlign: 'center',
 };
