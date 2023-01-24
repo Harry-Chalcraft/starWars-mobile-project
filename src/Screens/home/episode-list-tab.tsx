@@ -1,14 +1,16 @@
 import React, { FC, useState, useEffect } from 'react';
 import { FlatList, Switch } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigatorParams } from '../../navigator';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useQuery } from '@apollo/client';
 import styled from 'styled-components';
 import moment from 'moment';
+import { useQuery } from '@apollo/client';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+
 import { GET_ALL_EPISODES } from '../../gql/queries';
+import { StackNavigatorParams } from '../../navigator';
 import { Film } from '../../types';
 import { colors, sizes } from '../../theme/constants';
+import { moderateScale } from '../../theme/metrics';
 import {
   SafeAreaView,
   ScrollView,
@@ -18,7 +20,6 @@ import {
   LoaderView,
   ErrorView,
 } from '../../components';
-import { moderateScale } from '../../theme/metrics';
 
 type Data = {
   allFilms: {

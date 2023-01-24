@@ -1,17 +1,16 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { View, FlatList } from 'react-native';
-import { useQuery } from '@apollo/client';
+import styled from 'styled-components';
 import moment from 'moment';
-import { GET_EPISODE } from '../gql/queries';
+import { useQuery } from '@apollo/client';
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import styled from 'styled-components';
+import { GET_EPISODE } from '../gql/queries';
+import { StackNavigatorParams } from '../navigator';
 import { Film } from '../types';
 import { sizes } from '../theme/constants';
-
-import { StackNavigatorParams } from '../navigator';
-
+import { verticalScale } from '../theme/metrics';
 import {
   SafeAreaView,
   ScrollView,
@@ -22,7 +21,6 @@ import {
   LoaderView,
   ErrorView,
 } from '../components';
-import { verticalScale } from '../theme/metrics';
 
 type RouteProps = RouteProp<StackNavigatorParams, 'Episode'>;
 export interface Props {
@@ -42,8 +40,8 @@ const Episode = (props: Props): ReactElement => {
       params: { filmId },
     },
   } = props;
-  const navigation = useNavigation<StackNavigationProp<StackNavigatorParams>>();
   const [film, setFilm] = useState<Film>();
+  const navigation = useNavigation<StackNavigationProp<StackNavigatorParams>>();
   const { data, loading, error } = useQuery<Data>(GET_EPISODE, {
     variables: { filmId },
   });

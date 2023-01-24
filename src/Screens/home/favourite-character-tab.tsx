@@ -1,16 +1,15 @@
 import React, { FC } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
+import { useQuery } from '@apollo/client';
 import {
   useNavigation,
   NavigationProp,
   ParamListBase,
 } from '@react-navigation/native';
 
-import { useQuery } from '@apollo/client';
 import { GET_SAVED_CHARACTERS } from '../../gql/queries';
 import { Character } from '../../types';
-
 import {
   SafeAreaView,
   ScrollView,
@@ -31,8 +30,8 @@ const MessageWrapper = styled(View)`
 `;
 
 const FavouriteCharacters: FC = () => {
-  const { data, loading, error } = useQuery<Data>(GET_SAVED_CHARACTERS);
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const { data, loading, error } = useQuery<Data>(GET_SAVED_CHARACTERS);
 
   const onPress = (personId: string) => {
     navigation.navigate('MovieNavigator', {

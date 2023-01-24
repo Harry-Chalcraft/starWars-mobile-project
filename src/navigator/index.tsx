@@ -10,14 +10,16 @@ import {
   createStackNavigator,
   StackNavigationOptions,
 } from '@react-navigation/stack';
+import { HeaderBackButton } from '@react-navigation/elements';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import EpisodeList from '../screens/home/episode-list-tab';
 import FavouriteCharacters from '../screens/home/favourite-character-tab';
 import Episode from '../screens/episode';
 import Character from '../screens/character';
+
 import { colors, sizes } from '../theme/constants';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { HeaderBackButton } from '@react-navigation/elements';
 import { moderateScale } from '../theme/metrics';
 
 export type StackNavigatorParams = {
@@ -86,6 +88,8 @@ const StackNavigator = (): ReactElement<StackNavigatorParams> => {
         component={Episode}
         options={{ title: 'Movie' }}
       />
+      {/* Here we need to configure the Header Back Button to handle when navigating
+    from the FavouriteCharacter screen since it is not in this stack */}
       <Stack.Screen
         name="Character"
         component={Character}

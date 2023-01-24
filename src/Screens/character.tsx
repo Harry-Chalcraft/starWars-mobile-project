@@ -1,6 +1,15 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { View, FlatList, BackHandler } from 'react-native';
 import { TapGestureHandler } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Animated, {
+  useSharedValue,
+  withTiming,
+  useAnimatedStyle,
+  withDelay,
+} from 'react-native-reanimated';
+import styled from 'styled-components';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   useNavigation,
   RouteProp,
@@ -8,17 +17,12 @@ import {
   ParamListBase,
 } from '@react-navigation/native';
 
-import { StackNavigatorParams } from '../navigator';
-import { useQuery } from '@apollo/client';
 import { GET_CHARACTER, GET_SAVED_CHARACTERS } from '../gql/queries';
 import { ADD_CHARACTER, DELETE_CHARACTER } from '../gql/mutations';
-
-import styled from 'styled-components';
-import { sizes, colors } from '../theme/constants';
+import { StackNavigatorParams } from '../navigator';
 import { Character } from '../types';
-import { useMutation } from '@apollo/client';
+import { sizes, colors } from '../theme/constants';
 import { verticalScale, horizontalScale } from '../theme/metrics';
-
 import {
   SafeAreaView,
   ScrollView,
@@ -30,15 +34,6 @@ import {
   ErrorView,
   Row,
 } from '../components';
-
-import Animated, {
-  useSharedValue,
-  withTiming,
-  useAnimatedStyle,
-  withDelay,
-} from 'react-native-reanimated';
-
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 type RouteProps = RouteProp<StackNavigatorParams, 'Character'>;
 export interface Props {
@@ -58,11 +53,9 @@ const CharacterInfo = (props: Props): ReactElement => {
       params: { personId, isFromFavouriteCharacters },
     },
   } = props;
-  const navigation = useNavigation<NavigationProp<ParamListBase>>();
-
   const [character, setCharacter] = useState<Character>();
   const [isCharacterSaved, setIsCharacterSaved] = useState<boolean>();
-
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const { data, loading, error } = useQuery<Data>(GET_CHARACTER, {
     variables: { personId },
   });
@@ -70,6 +63,8 @@ const CharacterInfo = (props: Props): ReactElement => {
   const [addCharacter] = useMutation(ADD_CHARACTER);
   const [deleteCharacter] = useMutation(DELETE_CHARACTER);
 
+  /* Here we need to configure the Android BackHandler to handle when navigating
+    from the FavouriteCharacter screen since it is not in this stack same as in the navigator file*/
   useEffect(() => {
     const backAction = () => {
       if (isFromFavouriteCharacters) {
@@ -142,15 +137,13 @@ const CharacterInfo = (props: Props): ReactElement => {
 
   const scale = useSharedValue(0);
   const opacity = useSharedValue(0);
-  const rSrtle = useAnimatedStyle(() => ({
+  const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: Math.max(scale.value, 0) }],
     opacity: opacity.value,
     alignSelf: 'center',
     position: 'absolute',
   }));
-
   const AnimatedIcon = Animated.createAnimatedComponent(Icon);
-
   const launchAnimation = () => {
     scale.value = withTiming(
       1,
@@ -168,7 +161,6 @@ const CharacterInfo = (props: Props): ReactElement => {
         }
       },
     );
-
     opacity.value = withTiming(
       1,
       {
@@ -186,6 +178,7 @@ const CharacterInfo = (props: Props): ReactElement => {
       },
     );
   };
+
   const iconStyle = { marginRight: verticalScale(sizes.medium) };
   const flexedViewStyle = { flex: 1 };
   const textStyle = {
@@ -226,7 +219,7 @@ const CharacterInfo = (props: Props): ReactElement => {
                       name={'heart'}
                       size={200}
                       color={colors.primary}
-                      style={[rSrtle]}
+                      style={[animatedStyle]}
                     />
                   </Animated.View>
                   <Text bold>Has appeared in: </Text>

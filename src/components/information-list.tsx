@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
-import { Row, Text } from '.';
 import { View } from 'react-native';
+import { Row, Text } from '.';
 
 interface Props {
   info: { label: string; content?: string | number }[];
