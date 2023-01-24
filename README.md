@@ -16,7 +16,7 @@ This was a very fun project to work on, combining some powerful tools!
 
 - Clone this project
 ```
-git clone https://github.com/Harry-Chalcraft/starwWars-mobile-project.git
+git clone https://github.com/Harry-Chalcraft/starWars-mobile-project.git
 ```
 
 - Launch ``` yarn ``` or ``` npm install ``` command in a terminal opened in the project folder.
