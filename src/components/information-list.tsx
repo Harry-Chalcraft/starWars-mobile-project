@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { Row, Text } from '.';
 import { View } from 'react-native';
 
@@ -6,7 +6,8 @@ interface Props {
   info: { label: string; content?: string | number }[];
 }
 
-const InformationList: FC<Props> = ({ info }) => {
+const InformationList = (props: Props): ReactElement => {
+  const { info } = props;
   return (
     <>
       {info?.map((item, index) => (

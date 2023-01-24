@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { TouchableWrapper, Row, Text, InformationList } from '.';
 
 interface Props {
@@ -13,17 +13,18 @@ interface Props {
   reducedWidth?: boolean;
 }
 
-const Card: FC<Props> = ({
-  title,
-  onCardPress,
-  id,
-  info,
-  coloredTitle,
-  fullBackgroundTitle,
-  textAlignSelf,
-  alignCenter,
-  reducedWidth,
-}) => {
+const Card = (props: Props): ReactElement => {
+  const {
+    title,
+    onCardPress,
+    id,
+    info,
+    coloredTitle,
+    fullBackgroundTitle,
+    textAlignSelf,
+    alignCenter,
+    reducedWidth,
+  } = props;
   return (
     <TouchableWrapper
       reducedWidth={reducedWidth}
