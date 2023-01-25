@@ -54,6 +54,14 @@ cd ios && pod install
 ```
 yarn ios
 ```
+
+### Or
+You can also 
+```
+yarn start
+```
+and choose directly on which OS to run it ;)
+
 That's it!
 
 ### Screenshots
